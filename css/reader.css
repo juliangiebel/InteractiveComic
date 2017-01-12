@@ -420,37 +420,8 @@ template {
   width: 80px;
   height: 30px; }
 
-.title {
-  text-align: center;
-  width: 100%;
-  padding-top: 20vh;
-  padding-bottom: 10vh;
-  clear: both; }
-
-.imgdisp {
-  position: fixed;
-  z-index: -1;
-  width: 95%;
-  height: 95vh;
-  transform-origin: center;
-  transform: translateX(2.5vw) translateY(2.5vh); }
-
-.button {
-  color: black;
-  text-decoration: none; }
-
-.imgdisp {
-  box-shadow: 0 0 21px 2px rgba(0, 0, 0, 0.64);
-  background-color: white; }
-
 body {
   margin: 0;
   background-color: #424242; }
 
-.b-container {
-  float: right;
-  margin-right: 40%;
-  padding-top: 15px;
-  padding-bottom: 15px; }
-
-/*# sourceMappingURL=main.css.map */
+/*# sourceMappingURL=reader.css.map */

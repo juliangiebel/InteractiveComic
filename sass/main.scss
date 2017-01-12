@@ -1,7 +1,23 @@
 @import "tools/bourbon/bourbon";
 @import "tools/normalize";
+//Own CSS!
+//Layout
 @import "base/generics";
+@import "layout/b_layout";
+@import "layout/index_title";
+@import "layout/imgdisp";
+//Style
+@import "style/b_style";
+@import "style/imgdisp";
 
 body {
   margin: 0;
+  background-color: #424242;
+}
+
+.b-container {
+  float: right;
+  margin-right: 40%;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }

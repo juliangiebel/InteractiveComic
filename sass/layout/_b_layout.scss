@@ -1,0 +1,18 @@
+
+.b-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.button:first-of-type {
+  margin: 0;
+}
+
+.button {
+  display: flex;
+  margin-top: 20px;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 30px;
+}
