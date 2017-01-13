@@ -1,9 +1,12 @@
 @import "tools/bourbon/bourbon";
 @import "tools/normalize";
 //Own CSS!
+//layout
 @import "base/generics";
 @import "layout/b_layout";
-
+@import "layout/imgdisp";
+//style
+@import "style/imgdisp";
 body {
   margin: 0;
   background-color: #424242;
