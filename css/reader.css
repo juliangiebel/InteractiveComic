@@ -423,13 +423,11 @@ template {
 .imgdisp {
   position: fixed;
   z-index: -1;
-  width: 95%;
-  height: 95vh;
   transform-origin: center;
-  transform: translateX(2.5vw) translateY(2.5vh); }
+  transform: translate(29.5px, 0px); }
 
 .imgdisp {
-  box-shadow: 0 0 21px 2px rgba(0, 0, 0, 0.64);
+  box-shadow: 0 0 21px 4px rgba(0, 0, 0, 0.85);
   background-color: white; }
 
 body {

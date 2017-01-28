@@ -1,8 +1,9 @@
 .imgdisp {
   position: fixed;
   z-index: -1;
-  width: 95%;
-  height: 95vh;
+  //width: 95%;
+  //height: 95vh;
   transform-origin: center;
-  transform: translateX(2.5vw) translateY(2.5vh);
+  transform: translate(29.5px, 0px);
+  //transform: translateX(2.5vw) translateY(2.5vh);
 }
