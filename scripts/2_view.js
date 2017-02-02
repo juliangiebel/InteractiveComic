@@ -1,4 +1,4 @@
-//esversion: 6
+/*jshint esversion: 6 */
 
 const MAXWIDTH = 1620;
 const MAXHEIGHT = 960;

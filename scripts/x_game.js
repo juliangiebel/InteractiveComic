@@ -1,4 +1,4 @@
-
+/*jshint esversion: 6 */
 class Game{
   constructor(firstScene){
     this.view = View.instance;

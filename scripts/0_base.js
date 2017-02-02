@@ -1,6 +1,4 @@
-
-
-
+/*jshint esversion: 6 */
 var stateStack = [];
 var stateman = {
   init: function(){

@@ -1,5 +1,4 @@
-
-
+/*jshint esversion: 6 */// Source: scripts/0_base.js
 
 var stateStack = [];
 var stateman = {
@@ -36,7 +35,9 @@ var stateman = {
 };
 
 var upInterval = setInterval(stateman.update,20);
-;//Abstract
+// Source: scripts/1_gpc_obj.js
+
+//Abstract
 class GElement {
   constructor(_x,_y){
     if (new.target === GElement) {
@@ -52,7 +53,7 @@ class GElement {
 class Img extends GElement{
   constructor(image,x,y,width,height,cx,cy,cWidth,cHeight){
     super(x,y);
-    this.image = image
+    this.image = image;
     this.width = width;
     this.height = height;
     this.cx = cx;
@@ -70,7 +71,8 @@ class Img extends GElement{
   }
 
 }
-;//esversion: 6
+// Source: scripts/2_view.js
+
 
 const MAXWIDTH = 1620;
 const MAXHEIGHT = 960;
@@ -133,7 +135,66 @@ class _View {
      this.elements.push(element);
    }
 }
-;
+// Source: scripts/3_scene_parser.js
+
+/**Requests a file as plain text from the server.
+ * @param {string} url The url of the file to be loaded.
+ * @returns {Promise} The Promise handling the response from the XMLHttpRequest.
+ */
+function get(url){
+  return new Promise(function(resolve,reject){
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET",url,true);
+    //React to response
+    xhttp.onload = function() {
+          if (xhttp.status == 200) {
+              resolve(xhttp.responseText);
+         }else{
+           reject(Error(xhttp.statusText));
+         }
+      };
+    //Handle network errors
+    xhttp.onerror = function() {
+      reject(Error("Network Error"));
+    };
+    //Make the request
+    xhttp.send();
+  });
+}
+
+/**Requests a JSON file from the server.
+ * Adds an extra step to the {@link get} function, parsing the response into a JSON object.
+ * @param {string} url The url of the file to be loaded.
+ * @returns {Promise} The Promise handling the response from the XMLHttpRequest.
+ */
+function getJson(url){
+  return get(url).then(JSON.parse).catch(function(err){
+    return Promise.reject(Error("Error while parsing a file. "+err.message));
+  });
+}
+
+var SceneLoader = new Promise(function(resolve, reject,src){
+
+  if (true) {
+    resolve();
+  } else {
+    reject(Error("Temp Error msg"));
+  }
+});
+
+//Testcode:
+get("tesss.json").then(function(cont){
+  //will never run, there is no file called tesss.json
+  console.log(cont);
+});
+
+getJson("test.json").then(function(cont){
+  console.log("succes!\n" + cont.test);
+});
+
+//---------------------
+// Source: scripts/x_game.js
+
 class Game{
   constructor(firstScene){
     this.view = View.instance;

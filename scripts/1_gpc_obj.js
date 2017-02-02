@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 //Abstract
 class GElement {
   constructor(_x,_y){
@@ -14,7 +15,7 @@ class GElement {
 class Img extends GElement{
   constructor(image,x,y,width,height,cx,cy,cWidth,cHeight){
     super(x,y);
-    this.image = image
+    this.image = image;
     this.width = width;
     this.height = height;
     this.cx = cx;
