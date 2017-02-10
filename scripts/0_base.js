@@ -27,6 +27,16 @@ var stateman = {
 
     return lState;
   },
+  swap: function(state){
+    var tmp = this.pop();
+    try {
+      this.push();
+    } catch (e) {
+      Error("Error during state swap: "+e.message);
+    } finally {
+      this.push(tmp);
+    }
+  },
   destruct: function(){
     stateStack.forEach(function(e){e.pause();e.destruct();});
     stateStack = [];
