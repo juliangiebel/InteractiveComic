@@ -55,3 +55,5 @@ img/
 node_modules/
 package.json
 Gruntfile.js
+resources/Comic/
+resources/Material/

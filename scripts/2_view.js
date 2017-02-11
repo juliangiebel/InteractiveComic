@@ -22,8 +22,8 @@
 //
 // image.src = "img/sunrise-1756274_640.jpg";
 
-const MAXWIDTH = 1620;
-const MAXHEIGHT = 960;
+const MAXWIDTH = 1920;
+const MAXHEIGHT = 1080;
 
 var SingleView = {
   get instance(){
@@ -38,7 +38,7 @@ var SingleView = {
 /**Class handling a canvas and elements drawn onto it.*/
 class View {
 
-  /**Create a view
+  /**Creates a view
    * @param {Object} canvas The canvas to be handled.
    * @param {number} [maxWidth] Maximum width the canvas can have.
    * @param {number} [maxHeight] Maximum height the canvas can have.
@@ -50,12 +50,19 @@ class View {
     this.ctx = canvas.getContext("2d");
     this.elements = [];
    }
+   getRatio(){
+     //adjusted height = <user-chosen width> * original height / original width
+     //adjusted width = <user-chosen height> * original width / original height
+     return this.mWidth / this.mHeight;
+   }
    /**Resizes the canvas to match the window size or maxWidth/maxHeight*/
    resize(){
-     this.canvas.width  = Math.min(window.innerWidth,this.mWidth);
-     this.canvas.height = Math.min(window.innerHeight,this.mHeight);
-     var styletext = "translate(" +((window.innerWidth - this.canvas.width)/2) +"px, " +((window.innerHeight - this.canvas.height)/2) +"px)";
-     this.canvas.style.transform = styletext;
+    //HACK Hacked in aspect ratio!
+    this.canvas.width  = window.innerWidth;
+    this.canvas.height = window.innerWidth / this.getRatio();
+    this.ctx.scale(1.15/(this.mWidth/this.canvas.width),1.15/(this.mHeight/this.canvas.height));
+    var styletext = "translate(" +((window.innerWidth - this.canvas.width)/2) +"px, " +((window.innerHeight - this.canvas.height)/2) +"px)";
+    this.canvas.style.transform = styletext;
    }
    /**Draws all elements.*/
    draw(){

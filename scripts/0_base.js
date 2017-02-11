@@ -10,7 +10,7 @@ var stateman = {
   },
   push: function(state){
     if(state.update === undefined){
-      throw new TypeError("State doesn't contain update function");
+      throw new TypeError("State doesn't contain an update function");
     }
     if(stateStack.length > 0) stateStack[stateStack.length -1].pause();
 
@@ -30,11 +30,10 @@ var stateman = {
   swap: function(state){
     var tmp = this.pop();
     try {
-      this.push();
-    } catch (e) {
-      Error("Error during state swap: "+e.message);
-    } finally {
+      this.push(state);
+    }catch (e) {
       this.push(tmp);
+      throw Error("Error during state swap: "+e.message);
     }
   },
   destruct: function(){
