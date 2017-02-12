@@ -42,8 +42,6 @@ var EventMgr = {
   })(),
   onMouseMove: (function() {
     var handlers = [];
-    var scaleX = 1;
-    var scaleY = 1;
     var sort = function() {
       handlers.sort(function(a,b){return (a.x + a.y)-(b.x + b.y);});
     };
@@ -51,8 +49,13 @@ var EventMgr = {
       var pos = getCursorPosition(SingleView.instance.canvas,e);
       //console.log("Click: " + pos.x +"|"+pos.y);
       for (var handle of handlers){
+        //console.log((handle.aabb.x*_eventmgrscale.x)+"|"+(handle.aabb.y*_eventmgrscale.y)+"||"+(handle.aabb.bx*_eventmgrscale.x)+"|"+(handle.aabb.by*_eventmgrscale.y));
         if((handle.aabb.x*_eventmgrscale.x) < pos.x && pos.x < (handle.aabb.bx*_eventmgrscale.x) &&
-          (handle.aabb.y*_eventmgrscale.y) < pos.y && pos.y < (handle.aabb.by*_eventmgrscale.y)) handle.callback(e);
+          (handle.aabb.y*_eventmgrscale.y) < pos.y && pos.y < (handle.aabb.by*_eventmgrscale.y)){
+            handle.callback(e,true);
+          }else{
+            handle.callback(e,false);
+          }
       }
     }.bind(this);
     //constructor:
@@ -60,7 +63,7 @@ var EventMgr = {
 
     return {
       add: function(aabb,callback) {
-        console.log("add");
+        console.log("add mouse move");
         handlers.push({aabb,callback});
         sort();
       },

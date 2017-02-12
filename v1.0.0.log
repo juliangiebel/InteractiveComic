@@ -1,0 +1,118 @@
+﻿[33mcommit 1eb3ed08f6a46f2207f52454ef36390feb1f74c5[m
+Author: juliangiebel <juliangiebel@live.de>
+Date:   Sun Feb 12 12:50:06 2017 +0100
+
+    Implement interactive scenes
+
+[33mcommit fabf978880ec59921dcbf118e27cbd0c9b4430d6[m
+Author: juliangiebel <juliangiebel@live.de>
+Date:   Sun Feb 12 01:37:16 2017 +0100
+
+    Implement an image loader.
+    
+    Used to load images async.
+    Added the *createSequence* function for chaining promises.
+
+[33mcommit fe666e7256fdd533d4b601083eb77854290918bc[m
+Author: juliangiebel <juliangiebel@live.de>
+Date:   Sat Feb 11 23:07:06 2017 +0100
+
+    Implement loading normal scenes
+    
+    Fix scaling of the canvas object and its contents.
+    Finish implementing the event manager.
+
+[33mcommit 16d3d55547f33775ad5ff0827d3c77929105b15c[m
+Author: juliangiebel <juliangiebel@live.de>
+Date:   Fri Feb 10 03:34:11 2017 +0100
+
+    Work on loading scenes
+    
+    * Implement an entity manager for events that can't be reached by
+    objects 'inside' the canvas.
+    * Work on loadScene.
+    * Rename *Game* class to *Scene* and move to *4_scene_parser.js*.
+    * Make documenting a grunt task.
+
+[33mcommit 9f13e38ed6c14a900853c8edca7d9d9a2dd3313d[m
+Author: juliangiebel <juliangiebel@live.de>
+Date:   Thu Feb 2 23:30:03 2017 +0100
+
+    Arbeit am laden der Szenen
+    
+    Funktionen zum Asynchronen laden von Text und JSON Dateien hinzugefügt.
+    Mit schreiben von JSDoc Kommentaren angefangen.
+
+[33mcommit b1cb2f5a798864bdefad33eb3b7db9344bad022a[m
+Author: juliangiebel <juliangiebel@live.de>
+Date:   Wed Feb 1 18:10:06 2017 +0100
+
+    Programmstruktur Implementiert
+    
+    Den Statemanager, und die View klasse fertiggestellt.
+    Die States kümmern sich selber darum events in 'resume' und 'pause'
+    hinzuzufügen bzw. zu entfernen.
+    closes #1
+
+[33mcommit dc67843f960a36dbfa9308e49ed752fb9d4bf2da[m
+Author: Julian Giebel <juliangiebel@live.de>
+Date:   Wed Feb 1 02:41:17 2017 +0100
+
+    Cleanup img (#7)
+    
+    * Delete bg-pattern2-perf.png
+    
+    * Delete sunrise-1756274_1280.jpg
+    
+    * Delete sunrise-1756274_1920.jpg
+    
+    * Delete sunrise-1756274_640.jpg
+
+[33mcommit 6ec75554d4d63c898b63d489f97d04d76e0a3602[m
+Author: juliangiebel <juliangiebel@live.de>
+Date:   Wed Feb 1 02:32:28 2017 +0100
+
+    Arbeit an der Programmstruktur
+    
+    Einen State Manager hinzugefügt.
+    Ich benutze jetzt Grunt um mehrere .js Dateien zu einer zusammenzufassen
+
+[33mcommit fbd4a004b1c6cbcf4e9c7ea65e6abe6cb2ed2846[m
+Author: juliangiebel <juliangiebel@live.de>
+Date:   Sat Jan 28 23:38:35 2017 +0100
+
+    Canvas Größe
+    
+    Automatisches anpassen der Canvas Größe und mittige Platzierung beim
+    überschreiten der maximalen Größe hinzugefügt
+
+[33mcommit e9366d9a56d6d678c5772412697eab472c116bae[m
+Author: juliangiebel <juliangiebel@live.de>
+Date:   Fri Jan 13 01:30:27 2017 +0100
+
+    Reader page
+    
+    Canvas hinzugefügt mit testbild
+
+[33mcommit f238061cbef42006cc1584a479c28191896700a7[m
+Author: juliangiebel <juliangiebel@live.de>
+Date:   Thu Jan 12 01:03:37 2017 +0100
+
+    Arbeit am Hauptmenü
+    
+    #Erstes Layout für das Hauptmenü.
+    Wird warscheinlich ersetzt weil ich möglicherweise mit Canvas arbeite.
+
+[33mcommit d4872a1d4234ec9afa6a658869a33e6aa8839c88[m
+Author: juliangiebel <juliangiebel@live.de>
+Date:   Wed Jan 11 14:07:11 2017 +0100
+
+    Project base
+    
+    Prepared base files and tools for this project.
+
+[33mcommit abd4eb9c670b9cd82f9ef4841782da263419d0e9[m
+Author: juliangiebel <juliangiebel@live.de>
+Date:   Sat Jan 7 22:15:20 2017 +0100
+
+    :lollipop: Added .gitattributes

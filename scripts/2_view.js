@@ -55,14 +55,17 @@ class View {
      //adjusted width = <user-chosen height> * original width / original height
      return this.mWidth / this.mHeight;
    }
+   getScale(){
+     return {x: 1/(this.mWidth/this.canvas.width),y: 1/(this.mHeight/this.canvas.height)};
+   }
    /**Resizes the canvas to match the window size or maxWidth/maxHeight*/
    resize(){
     //HACK Hacked in aspect ratio!
     this.canvas.width  = window.innerWidth;
     this.canvas.height = window.innerWidth / this.getRatio();
-    let scale = {x: 1/(this.mWidth/this.canvas.width),y: 1/(this.mHeight/this.canvas.height)};
-    this.ctx.scale(scale.x,scale.y);
-    EventMgr.setScale(scale.x,scale.y);
+    this.scale = this.getScale();
+    //this.ctx.scale(this.scale.x,this.scale.y);
+    EventMgr.setScale(this.scale.x,this.scale.y);
     var styletext = "translate(" +((window.innerWidth - this.canvas.width)/2) +"px, " +((window.innerHeight - this.canvas.height)/2) +"px)";
     this.canvas.style.transform = styletext;
    }
@@ -83,4 +86,7 @@ class View {
      this.elements.push(element);
    }
    //TODO Add a function that removes an element from the list of elements.
+   deleteAll(){
+     this.elements = [];
+   }
 }

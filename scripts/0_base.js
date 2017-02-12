@@ -42,4 +42,4 @@ var stateman = {
   }
 };
 
-var upInterval = setInterval(stateman.update,20);
+var upInterval = setInterval(stateman.update,30);

@@ -8,7 +8,7 @@ var v = SingleView.instance;
 function resEvent(){
   v.resize();
 }
-
+ //v.ctx.imageSmoothingEnabled = true;
 ['resize'].forEach(function(e){
   window.addEventListener(e, resEvent, false);
 });
@@ -20,8 +20,10 @@ resEvent();
 // v.add(background);
 // v.draw();
 
-getJson("resources/scene5.json").then(function(cont) {
+getJson("resources/scene1.json").then(function(cont) {
   loadScene(cont).then(function(testScene){
+  stateman.destruct();
+  SingleView.instance.deleteAll();
   stateman.push(testScene);
 });});
 

@@ -43,7 +43,7 @@ var stateman = {
   }
 };
 
-var upInterval = setInterval(stateman.update,20);
+var upInterval = setInterval(stateman.update,30);
 // Source: scripts/1_gpc_obj.js
 
 //Abstract
@@ -72,11 +72,7 @@ class Img extends GElement{
   }
 
   draw(canvas,ctx){
-    if(this.width === undefined || this.height === undefined){
-      this.width = canvas.width;
-      this.height = canvas.height;
-    }
-    ctx.drawImage(this.image,this.position.x,this.position.y,this.width,this.height);
+    ctx.drawImage(this.image,this.position.x,this.position.y,this.width||canvas.width,this.height||canvas.height);
   }
 
 }
@@ -138,14 +134,17 @@ class View {
      //adjusted width = <user-chosen height> * original width / original height
      return this.mWidth / this.mHeight;
    }
+   getScale(){
+     return {x: 1/(this.mWidth/this.canvas.width),y: 1/(this.mHeight/this.canvas.height)};
+   }
    /**Resizes the canvas to match the window size or maxWidth/maxHeight*/
    resize(){
     //HACK Hacked in aspect ratio!
     this.canvas.width  = window.innerWidth;
     this.canvas.height = window.innerWidth / this.getRatio();
-    let scale = {x: 1/(this.mWidth/this.canvas.width),y: 1/(this.mHeight/this.canvas.height)};
-    this.ctx.scale(scale.x,scale.y);
-    EventMgr.setScale(scale.x,scale.y);
+    this.scale = this.getScale();
+    //this.ctx.scale(this.scale.x,this.scale.y);
+    EventMgr.setScale(this.scale.x,this.scale.y);
     var styletext = "translate(" +((window.innerWidth - this.canvas.width)/2) +"px, " +((window.innerHeight - this.canvas.height)/2) +"px)";
     this.canvas.style.transform = styletext;
    }
@@ -166,6 +165,9 @@ class View {
      this.elements.push(element);
    }
    //TODO Add a function that removes an element from the list of elements.
+   deleteAll(){
+     this.elements = [];
+   }
 }
 // Source: scripts/3_events.js
 
@@ -212,8 +214,6 @@ var EventMgr = {
   })(),
   onMouseMove: (function() {
     var handlers = [];
-    var scaleX = 1;
-    var scaleY = 1;
     var sort = function() {
       handlers.sort(function(a,b){return (a.x + a.y)-(b.x + b.y);});
     };
@@ -221,8 +221,13 @@ var EventMgr = {
       var pos = getCursorPosition(SingleView.instance.canvas,e);
       //console.log("Click: " + pos.x +"|"+pos.y);
       for (var handle of handlers){
+        //console.log((handle.aabb.x*_eventmgrscale.x)+"|"+(handle.aabb.y*_eventmgrscale.y)+"||"+(handle.aabb.bx*_eventmgrscale.x)+"|"+(handle.aabb.by*_eventmgrscale.y));
         if((handle.aabb.x*_eventmgrscale.x) < pos.x && pos.x < (handle.aabb.bx*_eventmgrscale.x) &&
-          (handle.aabb.y*_eventmgrscale.y) < pos.y && pos.y < (handle.aabb.by*_eventmgrscale.y)) handle.callback(e);
+          (handle.aabb.y*_eventmgrscale.y) < pos.y && pos.y < (handle.aabb.by*_eventmgrscale.y)){
+            handle.callback(e,true);
+          }else{
+            handle.callback(e,false);
+          }
       }
     }.bind(this);
     //constructor:
@@ -230,7 +235,7 @@ var EventMgr = {
 
     return {
       add: function(aabb,callback) {
-        console.log("add");
+        console.log("add mouse move");
         handlers.push({aabb,callback});
         sort();
       },
@@ -332,7 +337,7 @@ class Scene{
         getJson("resources/" + localLink.link).then(this.nextScene);
       }.bind(this);
     }.bind(this);
-    this.images.push(new Img(img,0,0,MAXWIDTH,MAXHEIGHT));
+    if(img)this.images.push(new Img(img,0,0,MAXWIDTH,MAXHEIGHT));
 
     for (var link of links) {
 
@@ -378,16 +383,56 @@ class NormalScene extends Scene{
 }
 class MovingScene extends Scene{
   constructor(img,data){
-    super(img,data.links);
-    var bgImg = this.images.shift();
-    bgImg.width = data.width;
-    bgImg.position.x = -data.width/2 + SingleView.instance.canvas.width/2;
+    super(undefined,data.links);
+    var bgImg = new Img(img,0,0,data.width,MAXHEIGHT);
+    bgImg.position.x = -data.width/2 + SingleView.instance.canvas.width/(2*SingleView.instance.getScale().x);
     this.images.unshift(bgImg);
+    this.xoffset = 0;
 
+    var moveCB = function(parallax,direction){
+      //TODO Validate arguments!
+      var lParallax = parallax;
+      var lDirection = direction;
+      return function(e,mouseOver){
+          parallax.direction[direction] = mouseOver;
+      }.bind(this);
+    }.bind(this);
+    let aabbL = {x:0,y:0,bx:SingleView.instance.canvas.width/3,by:SingleView.instance.canvas.height};
+    var aabbR = {x:(SingleView.instance.canvas.width-(SingleView.instance.canvas.width/3)),
+      y:0,bx:SingleView.instance.canvas.width+SingleView.instance.canvas.width/3,by:SingleView.instance.canvas.height};
+
+    this.parallax = {bg:bgImg,img:new Img(data.parallax,data.px,data.py,data.pw,data.ph),pscale:data.pscale,callback: moveCB,fields:{aabbL,aabbR},direction:[false,false]};
   }
-  init(){
-    super.init();
+  resume(){
+    super.resume();
+    EventMgr.onMouseMove.add(this.parallax.fields.aabbL,this.parallax.callback(this.parallax,0));
+    EventMgr.onMouseMove.add(this.parallax.fields.aabbR,this.parallax.callback(this.parallax,1));
+  }
+  update(){
+    let x = this.xoffset;
+    let ctx = SingleView.instance.ctx;
+    let scale = SingleView.instance.getScale();
+    let llim = ctx.canvas.width/(2*scale.x), rlim = -(ctx.canvas.width/(2*scale.x));
+    //console.log(llim +"|"+ rlim);
+    if (this.parallax.direction[0]&&!this.parallax.direction[1]&& this.xoffset != llim) {
+      this.xoffset += 18;
+      if(this.xoffset > llim) this.xoffset = llim;
+      x = this.xoffset;
+    } else if(!this.parallax.direction[0]&&this.parallax.direction[1]&& this.xoffset != rlim){
+      this.xoffset += -18;
+      if(this.xoffset < rlim) this.xoffset = rlim;
+      x = this.xoffset;
+    }
 
+    ctx.setTransform(scale.x,0,0,scale.y,x*scale.x,0);
+    super.update();
+    ctx.setTransform(scale.x,0,0,scale.y,x*this.parallax.pscale*scale.x,0);
+    this.parallax.img.draw(ctx.canvas,ctx);
+  }
+  pause(){
+    super.pause();
+    EventMgr.onMouseMove.remove(this.parallax.fields.aabbL,this.parallax.callback(this.parallax,0));
+    EventMgr.onMouseMove.remove(this.parallax.fields.aabbR,this.parallax.callback(this.parallax,1));
   }
 }
 /**Loads a scene from a json object.
@@ -411,6 +456,9 @@ function loadScene(sceneF){
         break;
       case "moving":
         var moving = true;
+        var parallax = new Image();
+        parallax.src = "resources/" + sceneF.parallax;
+        sceneF.parallax = parallax;
         /* falls through */
       case "interactive":
         var img = new Image();
@@ -426,8 +474,6 @@ function loadScene(sceneF){
           resolve(moving?new MovingScene(img,sceneF):new Scene(img,sceneF.links));
         });
         break;
-
-        //NOTE Animiated scenens?
       default:
         //TODO Add error handling for unknown type.
         throw Error("Invalide type: "+sceneF.type);
@@ -462,7 +508,7 @@ var v = SingleView.instance;
 function resEvent(){
   v.resize();
 }
-
+ //v.ctx.imageSmoothingEnabled = true;
 ['resize'].forEach(function(e){
   window.addEventListener(e, resEvent, false);
 });
@@ -474,8 +520,10 @@ resEvent();
 // v.add(background);
 // v.draw();
 
-getJson("resources/scene5.json").then(function(cont) {
+getJson("resources/scene1.json").then(function(cont) {
   loadScene(cont).then(function(testScene){
+  stateman.destruct();
+  SingleView.instance.deleteAll();
   stateman.push(testScene);
 });});
 

@@ -25,11 +25,7 @@ class Img extends GElement{
   }
 
   draw(canvas,ctx){
-    if(this.width === undefined || this.height === undefined){
-      this.width = canvas.width;
-      this.height = canvas.height;
-    }
-    ctx.drawImage(this.image,this.position.x,this.position.y,this.width,this.height);
+    ctx.drawImage(this.image,this.position.x,this.position.y,this.width||canvas.width,this.height||canvas.height);
   }
 
 }
