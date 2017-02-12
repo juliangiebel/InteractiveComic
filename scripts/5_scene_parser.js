@@ -1,53 +1,4 @@
 /*jshint esversion: 6 */
-/**Requests a file as plain text from the server.
- * @param {string} url The url of the file to be loaded.
- * @returns {Promise} The Promise handling the response from the XMLHttpRequest.
- */
-function get(url){
-  return new Promise(function(resolve,reject){
-    var xhttp = new XMLHttpRequest();
-    xhttp.open("GET",url,true);
-    //React to response
-    xhttp.onload = function() {
-          if (xhttp.status == 200) {
-              resolve(xhttp.responseText);
-         }else{
-           reject(Error(xhttp.statusText));
-         }
-      };
-    //Handle network errors
-    xhttp.onerror = function() {
-      reject(Error("Network Error"));
-    };
-    //Make the request
-    xhttp.send();
-  });
-}
-
-/**Requests a JSON file from the server.
- * Adds an extra step to the {@link get} function, parsing the response into a JSON object.
- * @param {string} url The url of the file to be loaded.
- * @returns {Promise} A promise handling the response from the XMLHttpRequest.
- */
-function getJson(url){
-  return get(url).then(JSON.parse).catch(function(err){
-    return Promise.reject(Error("Error while parsing a file. "+err.message));
-  });
-}
-
-function getImage(url) {
-  return new Promise(function(resolve, reset){
-    var img = new Image();
-    img.src = url;
-    img.onload = function(){
-      resolve(img);
-    };
-    img.onerror = function() {
-      reject(Error("Couldn't load: "+url));
-    };
-  });
-}
-
 class Scene{
   constructor(img,links){
     this.test = "scene";
@@ -116,18 +67,17 @@ class NormalScene extends Scene{
 function loadScene(sceneF){
   return new Promise(function(resolve, reject){
 
-    img = new Image();
     console.log(sceneF.img);
-    img.src = "resources/" + sceneF.img;
 
     switch (sceneF.type) {
       case "normal":
-      console.log("normal");
-        this.scene = new NormalScene(img,sceneF.link);
-        img.onload = function(){
+        console.log("normal");
+        getImage("resources/" + sceneF.img).then(function(ret){
+          console.log(ret);
+          this.scene = new NormalScene(ret,sceneF.link);
           console.log("onload: " + this.scene.test);
           resolve(this.scene);
-        }.bind(this);
+        });
         break;
       case "interactive":
         //TODO Imlementing interactive scenes.

@@ -216,7 +216,7 @@ var EventMgr = {
 // }.bind(this,testcb);
 // EventMgr.onClick.add({x:20,y:20,bx:60,by:60},testcb);
 // //--------------
-// Source: scripts/4_scene_parser.js
+// Source: scripts/4_utils.js
 
 /**Requests a file as plain text from the server.
  * @param {string} url The url of the file to be loaded.
@@ -256,16 +256,29 @@ function getJson(url){
 
 function getImage(url) {
   return new Promise(function(resolve, reset){
-    var img = new Image();
-    img.src = url;
-    img.onload = function(){
-      resolve(img);
-    };
-    img.onerror = function() {
+    this.mg = new Image();
+    mg.src = url;
+    mg.onload = function(){
+      resolve(this.mg);
+    }.bind(this);
+    mg.onerror = function() {
       reject(Error("Couldn't load: "+url));
     };
   });
 }
+
+function createSequence(list,promise) {
+  return Promise.all(list.map(promise));
+}
+
+// //Testcode:
+// createSequence(["test.json","test.json","test.json","test.json","test.json","test.json"],(entry) => {
+//   return Promise.resolve("hi");
+// }).then(function(ret) {
+//   console.log("test:" + ret);
+// });
+// //------------------
+// Source: scripts/5_scene_parser.js
 
 class Scene{
   constructor(img,links){
@@ -335,18 +348,17 @@ class NormalScene extends Scene{
 function loadScene(sceneF){
   return new Promise(function(resolve, reject){
 
-    img = new Image();
     console.log(sceneF.img);
-    img.src = "resources/" + sceneF.img;
 
     switch (sceneF.type) {
       case "normal":
-      console.log("normal");
-        this.scene = new NormalScene(img,sceneF.link);
-        img.onload = function(){
+        console.log("normal");
+        getImage("resources/" + sceneF.img).then(function(ret){
+          console.log(ret);
+          this.scene = new NormalScene(ret,sceneF.link);
           console.log("onload: " + this.scene.test);
           resolve(this.scene);
-        }.bind(this);
+        });
         break;
       case "interactive":
         //TODO Imlementing interactive scenes.
