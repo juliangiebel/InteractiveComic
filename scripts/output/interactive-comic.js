@@ -143,7 +143,9 @@ class View {
     //HACK Hacked in aspect ratio!
     this.canvas.width  = window.innerWidth;
     this.canvas.height = window.innerWidth / this.getRatio();
-    this.ctx.scale(1.15/(this.mWidth/this.canvas.width),1.15/(this.mHeight/this.canvas.height));
+    let scale = {x: 1/(this.mWidth/this.canvas.width),y: 1/(this.mHeight/this.canvas.height)};
+    this.ctx.scale(scale.x,scale.y);
+    EventMgr.setScale(scale.x,scale.y);
     var styletext = "translate(" +((window.innerWidth - this.canvas.width)/2) +"px, " +((window.innerHeight - this.canvas.height)/2) +"px)";
     this.canvas.style.transform = styletext;
    }
@@ -173,11 +175,14 @@ function getCursorPosition(canvas, event) {
     var y = event.clientY - rect.top;
     return {x,y};
 }
-
+var _eventmgrscale = {x:1,y:1};
 var EventMgr = {
+  setScale: function(scalex, scaley){
+    _eventmgrscale.x = scalex;
+    _eventmgrscale.y = scaley;
+  },
   onClick: (function(){
   var handlers = [];
-  var scaleModyfier = 1;
   var sort = function() {
     handlers.sort(function(a,b){return (a.x + a.y)-(b.x + b.y);});
   };
@@ -185,17 +190,16 @@ var EventMgr = {
     var pos = getCursorPosition(SingleView.instance.canvas,e);
     console.log("Click: " + pos.x +"|"+pos.y);
     for (var handle of handlers){
-      if(scale(handle.aabb.x) < pos.x && pos.x < scale(handle.aabb.bx) && scale(handle.aabb.y) < pos.y && pos.y < scale(handle.aabb.by)) handle.callback(e);
+      if((handle.aabb.x*_eventmgrscale.x) < pos.x && pos.x < (handle.aabb.bx*_eventmgrscale.x) &&
+        (handle.aabb.y*_eventmgrscale.y) < pos.y && pos.y < (handle.aabb.by*_eventmgrscale.y)) handle.callback(e);
     }
   }.bind(this);
-  var scale = function(number) {
-    return number*scaleModyfier;
-  };
   //constructor:
   SingleView.instance.canvas.addEventListener("click", evCall, false);
 
   return {
     add: function(aabb,callback) {
+      console.log("add");
       handlers.push({aabb,callback});
       sort();
     },
@@ -203,12 +207,44 @@ var EventMgr = {
       //TODO Add error handling.
       handlers.splice(handlers.indexOf({aabb,callback}),1);
       sort();
-    },
-    setScale: function(scale){
-      scale = scale;
     }
   };
-})()};
+  })(),
+  onMouseMove: (function() {
+    var handlers = [];
+    var scaleX = 1;
+    var scaleY = 1;
+    var sort = function() {
+      handlers.sort(function(a,b){return (a.x + a.y)-(b.x + b.y);});
+    };
+    var evCall = function(e){
+      var pos = getCursorPosition(SingleView.instance.canvas,e);
+      //console.log("Click: " + pos.x +"|"+pos.y);
+      for (var handle of handlers){
+        if((handle.aabb.x*_eventmgrscale.x) < pos.x && pos.x < (handle.aabb.bx*_eventmgrscale.x) &&
+          (handle.aabb.y*_eventmgrscale.y) < pos.y && pos.y < (handle.aabb.by*_eventmgrscale.y)) handle.callback(e);
+      }
+    }.bind(this);
+    //constructor:
+    SingleView.instance.canvas.addEventListener("mousemove", evCall, false);
+
+    return {
+      add: function(aabb,callback) {
+        console.log("add");
+        handlers.push({aabb,callback});
+        sort();
+      },
+      remove: function(aabb,callback) {
+        //TODO Add error handling.
+        handlers.splice(handlers.indexOf({aabb,callback}),1);
+        sort();
+      },
+      setScale: function(scalex, scaley){
+        scaleX = scalex;
+        scaleY = scaley;
+      }};
+  })()
+};
 // //Testcode:
 // var testcb = function() {
 //   console.log("Click: invisible box");
@@ -255,11 +291,11 @@ function getJson(url){
 }
 
 function getImage(url) {
-  return new Promise(function(resolve, reset){
-    this.mg = new Image();
+  return new Promise(function(resolve, reject){
+    var mg = new Image();
     mg.src = url;
     mg.onload = function(){
-      resolve(this.mg);
+      resolve(mg);
     }.bind(this);
     mg.onerror = function() {
       reject(Error("Couldn't load: "+url));
@@ -268,7 +304,9 @@ function getImage(url) {
 }
 
 function createSequence(list,promise) {
-  return Promise.all(list.map(promise));
+  var promises = [];
+  list.forEach((item)=>{promises.push(promise(item));console.log(item);});
+  return Promise.all(promises);
 }
 
 // //Testcode:
@@ -287,31 +325,29 @@ class Scene{
     this.images = [];
     this.clickEv = [];
 
-    var callback = function(e){
-      getJson("resources/" + link).then(this.nextScene);
-    };
-
-    this.images.push(new Img(img,0,0));
+    var callback = function(link){
+        var localLink = link;
+        return function(e){
+        console.log(localLink.link);
+        getJson("resources/" + localLink.link).then(this.nextScene);
+      }.bind(this);
+    }.bind(this);
+    this.images.push(new Img(img,0,0,MAXWIDTH,MAXHEIGHT));
 
     for (var link of links) {
-      var tmp = {aabb:{x:link.x,y:link.y,bx:(link.x+link.w),by:(link.y+link.h)},callback:callback.bind(this,link)};
+
+      var tmp = {aabb:{x:link.x,y:link.y,bx:(link.x+link.w),by:(link.y+link.h)},callback:callback(link)};
       this.clickEv.push(tmp);
       if(link.img)this.images.push(new Img(link.img,link.x,link.y,link.w,link.h));
     }
 
   }
   init(){
-    this.onClick = function(){
-      // stateman.pop();
-    }.bind(this);
-
     for (var image of this.images) {
       this.view.add(image);
     }
   }
   resume(){
-    this.view.canvas.addEventListener("click", this.onClick, false);
-
     for (var ev of this.clickEv) {
       EventMgr.onClick.add(ev.aabb,ev.callback);
     }
@@ -325,8 +361,7 @@ class Scene{
     });
   }
   pause(){
-    this.view.canvas.removeEventListener("click", this.onClick);
-    for (var ev of clickEv) {
+    for (var ev of this.clickEv) {
       EventMgr.onClick.remove(ev.aabb,ev.callback);
     }
   }
@@ -338,7 +373,21 @@ class Scene{
 }
 class NormalScene extends Scene{
   constructor(img,data){
-    super(img,[{x:0,y:0,bx:SingleView.instance.canvas.width,by:SingleView.instance.canvas.height,link:data.link}]);
+    super(img,[{x:0,y:0,w:SingleView.instance.canvas.width,h:SingleView.instance.canvas.height,link:data.link}]);
+  }
+}
+class MovingScene extends Scene{
+  constructor(img,data){
+    super(img,data.links);
+    var bgImg = this.images.shift();
+    bgImg.width = data.width;
+    bgImg.position.x = -data.width/2 + SingleView.instance.canvas.width/2;
+    this.images.unshift(bgImg);
+
+  }
+  init(){
+    super.init();
+
   }
 }
 /**Loads a scene from a json object.
@@ -354,23 +403,34 @@ function loadScene(sceneF){
       case "normal":
         console.log("normal");
         getImage("resources/" + sceneF.img).then(function(ret){
-          console.log(ret);
-          this.scene = new NormalScene(ret,sceneF.link);
+          console.log("here: "+sceneF.link);
+          this.scene = new NormalScene(ret,sceneF);
           console.log("onload: " + this.scene.test);
           resolve(this.scene);
         });
         break;
-      case "interactive":
-        //TODO Imlementing interactive scenes.
-        scene = new Scene(img,sceneF.links);
-        //Load all images in 'links'...
-        break;
       case "moving":
-        //TODO Implement moving scenes.
+        var moving = true;
+        /* falls through */
+      case "interactive":
+        var img = new Image();
+        img.src = "resources/" + sceneF.img;
+        var sources = [];
+        sceneF.links.forEach((link)=>{sources.push("resources/" +link.img);});
+        console.log(sources);
+        createSequence(sources,(link)=>{return getImage(link);}).then((results)=>{
+          for (var i = 0; i < results.length; i++) {
+            console.log(results[i].src +"|"+ i);
+            sceneF.links[i].img = results[i];
+          }
+          resolve(moving?new MovingScene(img,sceneF):new Scene(img,sceneF.links));
+        });
         break;
+
         //NOTE Animiated scenens?
       default:
         //TODO Add error handling for unknown type.
+        throw Error("Invalide type: "+sceneF.type);
     }
 
     // if (true) {
@@ -414,7 +474,7 @@ resEvent();
 // v.add(background);
 // v.draw();
 
-getJson("resources/scene1.json").then(function(cont) {
+getJson("resources/scene5.json").then(function(cont) {
   loadScene(cont).then(function(testScene){
   stateman.push(testScene);
 });});

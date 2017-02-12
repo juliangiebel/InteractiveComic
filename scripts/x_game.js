@@ -20,7 +20,7 @@ resEvent();
 // v.add(background);
 // v.draw();
 
-getJson("resources/scene1.json").then(function(cont) {
+getJson("resources/scene5.json").then(function(cont) {
   loadScene(cont).then(function(testScene){
   stateman.push(testScene);
 });});

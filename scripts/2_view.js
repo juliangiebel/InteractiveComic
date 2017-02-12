@@ -60,7 +60,9 @@ class View {
     //HACK Hacked in aspect ratio!
     this.canvas.width  = window.innerWidth;
     this.canvas.height = window.innerWidth / this.getRatio();
-    this.ctx.scale(1.15/(this.mWidth/this.canvas.width),1.15/(this.mHeight/this.canvas.height));
+    let scale = {x: 1/(this.mWidth/this.canvas.width),y: 1/(this.mHeight/this.canvas.height)};
+    this.ctx.scale(scale.x,scale.y);
+    EventMgr.setScale(scale.x,scale.y);
     var styletext = "translate(" +((window.innerWidth - this.canvas.width)/2) +"px, " +((window.innerHeight - this.canvas.height)/2) +"px)";
     this.canvas.style.transform = styletext;
    }

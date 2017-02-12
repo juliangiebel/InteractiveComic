@@ -1,0 +1,10 @@
+{
+  "type":"moving",
+  "img":"Material/Anfang/Scene5Background.png",
+  "parallax":"Material/Anfang/Scene5MC.png","pscale":0.5,
+  "width":3840,
+  "links":[
+    {"x":110,"y":110,"w":100,"h":100,"img":"Material/Anfang/Scene5CityHighlight.png","link":"naechste_szene.json"},
+    {"x":110,"y":110,"w":100,"h":100,"img":"Material/Anfang/Scene5ForestHighlight.png","link":"naechste_szene2.json"}
+  ]
+}

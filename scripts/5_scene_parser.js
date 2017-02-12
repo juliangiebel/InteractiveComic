@@ -6,31 +6,29 @@ class Scene{
     this.images = [];
     this.clickEv = [];
 
-    var callback = function(e){
-      getJson("resources/" + link).then(this.nextScene);
-    };
-
-    this.images.push(new Img(img,0,0));
+    var callback = function(link){
+        var localLink = link;
+        return function(e){
+        console.log(localLink.link);
+        getJson("resources/" + localLink.link).then(this.nextScene);
+      }.bind(this);
+    }.bind(this);
+    this.images.push(new Img(img,0,0,MAXWIDTH,MAXHEIGHT));
 
     for (var link of links) {
-      var tmp = {aabb:{x:link.x,y:link.y,bx:(link.x+link.w),by:(link.y+link.h)},callback:callback.bind(this,link)};
+
+      var tmp = {aabb:{x:link.x,y:link.y,bx:(link.x+link.w),by:(link.y+link.h)},callback:callback(link)};
       this.clickEv.push(tmp);
       if(link.img)this.images.push(new Img(link.img,link.x,link.y,link.w,link.h));
     }
 
   }
   init(){
-    this.onClick = function(){
-      // stateman.pop();
-    }.bind(this);
-
     for (var image of this.images) {
       this.view.add(image);
     }
   }
   resume(){
-    this.view.canvas.addEventListener("click", this.onClick, false);
-
     for (var ev of this.clickEv) {
       EventMgr.onClick.add(ev.aabb,ev.callback);
     }
@@ -44,8 +42,7 @@ class Scene{
     });
   }
   pause(){
-    this.view.canvas.removeEventListener("click", this.onClick);
-    for (var ev of clickEv) {
+    for (var ev of this.clickEv) {
       EventMgr.onClick.remove(ev.aabb,ev.callback);
     }
   }
@@ -57,7 +54,21 @@ class Scene{
 }
 class NormalScene extends Scene{
   constructor(img,data){
-    super(img,[{x:0,y:0,bx:SingleView.instance.canvas.width,by:SingleView.instance.canvas.height,link:data.link}]);
+    super(img,[{x:0,y:0,w:SingleView.instance.canvas.width,h:SingleView.instance.canvas.height,link:data.link}]);
+  }
+}
+class MovingScene extends Scene{
+  constructor(img,data){
+    super(img,data.links);
+    var bgImg = this.images.shift();
+    bgImg.width = data.width;
+    bgImg.position.x = -data.width/2 + SingleView.instance.canvas.width/2;
+    this.images.unshift(bgImg);
+
+  }
+  init(){
+    super.init();
+
   }
 }
 /**Loads a scene from a json object.
@@ -73,23 +84,34 @@ function loadScene(sceneF){
       case "normal":
         console.log("normal");
         getImage("resources/" + sceneF.img).then(function(ret){
-          console.log(ret);
-          this.scene = new NormalScene(ret,sceneF.link);
+          console.log("here: "+sceneF.link);
+          this.scene = new NormalScene(ret,sceneF);
           console.log("onload: " + this.scene.test);
           resolve(this.scene);
         });
         break;
-      case "interactive":
-        //TODO Imlementing interactive scenes.
-        scene = new Scene(img,sceneF.links);
-        //Load all images in 'links'...
-        break;
       case "moving":
-        //TODO Implement moving scenes.
+        var moving = true;
+        /* falls through */
+      case "interactive":
+        var img = new Image();
+        img.src = "resources/" + sceneF.img;
+        var sources = [];
+        sceneF.links.forEach((link)=>{sources.push("resources/" +link.img);});
+        console.log(sources);
+        createSequence(sources,(link)=>{return getImage(link);}).then((results)=>{
+          for (var i = 0; i < results.length; i++) {
+            console.log(results[i].src +"|"+ i);
+            sceneF.links[i].img = results[i];
+          }
+          resolve(moving?new MovingScene(img,sceneF):new Scene(img,sceneF.links));
+        });
         break;
+
         //NOTE Animiated scenens?
       default:
         //TODO Add error handling for unknown type.
+        throw Error("Invalide type: "+sceneF.type);
     }
 
     // if (true) {

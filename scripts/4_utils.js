@@ -36,11 +36,11 @@ function getJson(url){
 }
 
 function getImage(url) {
-  return new Promise(function(resolve, reset){
-    this.mg = new Image();
+  return new Promise(function(resolve, reject){
+    var mg = new Image();
     mg.src = url;
     mg.onload = function(){
-      resolve(this.mg);
+      resolve(mg);
     }.bind(this);
     mg.onerror = function() {
       reject(Error("Couldn't load: "+url));
@@ -49,7 +49,9 @@ function getImage(url) {
 }
 
 function createSequence(list,promise) {
-  return Promise.all(list.map(promise));
+  var promises = [];
+  list.forEach((item)=>{promises.push(promise(item));console.log(item);});
+  return Promise.all(promises);
 }
 
 // //Testcode:
