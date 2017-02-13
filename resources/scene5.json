@@ -5,6 +5,6 @@
   "width":3840,
   "links":[
     {"x":1208,"y":192,"w":1672,"h":458,"img":"Material/Anfang/Scene5CityHighlight.png","link":"naechste_szene.json"},
-    {"x":-960,"y":492,"w":1484,"h":221,"img":"Material/Anfang/Scene5ForestHighlight.png","link":"naechste_szene2.json"}
+    {"x":-960,"y":492,"w":1484,"h":221,"img":"Material/Anfang/Scene5ForestHighlight.png","link":"scene6.json"}
   ]
 }

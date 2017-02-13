@@ -29,3 +29,19 @@ class Img extends GElement{
   }
 
 }
+
+class Rect extends GElement{
+  constructor(x,y,w,h,fill){
+    super(x,y);
+    this.w = w;
+    this.h = h;
+    this.fill = fill||false;
+  }
+  draw(canvas,ctx){
+    if(this.fill){
+      ctx.fillRect(this.position.x,this.position.y,this.w,this.h);
+    }else{
+      ctx.strokeRect(this.position.x,this.position.y,this.w,this.h);
+    }
+  }
+}

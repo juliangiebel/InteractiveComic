@@ -64,7 +64,7 @@ class View {
     this.canvas.width  = window.innerWidth;
     this.canvas.height = window.innerWidth / this.getRatio();
     this.scale = this.getScale();
-    //this.ctx.scale(this.scale.x,this.scale.y);
+    this.ctx.scale(this.scale.x,this.scale.y);
     EventMgr.setScale(this.scale.x,this.scale.y);
     var styletext = "translate(" +((window.innerWidth - this.canvas.width)/2) +"px, " +((window.innerHeight - this.canvas.height)/2) +"px)";
     this.canvas.style.transform = styletext;

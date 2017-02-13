@@ -17,7 +17,7 @@ function get(url){
       };
     //Handle network errors
     xhttp.onerror = function() {
-      reject(Error("Network Error"));
+      reject(Error("Network Error src: " + url));
     };
     //Make the request
     xhttp.send();

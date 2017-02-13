@@ -2,6 +2,6 @@
   "type":"interactive",
   "img":"Comic/Wald/scene 9-1.jpg",
   "links":[
-    {"x":0,"y":0,"w":0,"h":0,"img":"Material/Wald/Scene9-1MCHighlight.png","link":"scene10-1-1.json"},
-    {"x":0,"y":0,"w":0,"h":0,"img":"Material/Wald/Scene9-1BubbleHighlight.png","link":"scene10-1-2.json"}]
+    {"x":676,"y":237,"w":373,"h":843,"img":"Material/Wald/Scene9-1MCHighlight.png","link":"scene10-1-1.json"},
+    {"x":1403,"y":49,"w":439,"h":384,"img":"Material/Wald/Scene9-1BubbleHighlight.png","link":"scene10-1-2.json"}]
 }

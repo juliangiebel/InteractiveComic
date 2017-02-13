@@ -27,6 +27,7 @@ class Scene{
     for (var image of this.images) {
       this.view.add(image);
     }
+    resEvent();
   }
   resume(){
     for (var ev of this.clickEv) {
@@ -50,6 +51,7 @@ class Scene{
     for (var image of this.images) {
       //this.view.remove(image);
     }
+    SingleView.instance.ctx.resetTransform();
   }
 }
 class NormalScene extends Scene{
@@ -83,6 +85,7 @@ class MovingScene extends Scene{
     super.resume();
     EventMgr.onMouseMove.add(this.parallax.fields.aabbL,this.parallax.callback(this.parallax,0));
     EventMgr.onMouseMove.add(this.parallax.fields.aabbR,this.parallax.callback(this.parallax,1));
+    EventMgr.offset(this.xoffset);
   }
   update(){
     let x = this.xoffset;
@@ -99,7 +102,8 @@ class MovingScene extends Scene{
       if(this.xoffset < rlim) this.xoffset = rlim;
       x = this.xoffset;
     }
-
+    EventMgr.offset(this.xoffset);
+    EventMgr.setScale(scale.x,scale.y);
     ctx.setTransform(scale.x,0,0,scale.y,x*scale.x,0);
     super.update();
     ctx.setTransform(scale.x,0,0,scale.y,x*this.parallax.pscale*scale.x,0);
@@ -109,7 +113,9 @@ class MovingScene extends Scene{
     super.pause();
     EventMgr.onMouseMove.remove(this.parallax.fields.aabbL,this.parallax.callback(this.parallax,0));
     EventMgr.onMouseMove.remove(this.parallax.fields.aabbR,this.parallax.callback(this.parallax,1));
+    EventMgr.offset(0);
   }
+
 }
 /**Loads a scene from a json object.
  * @param {object} sceneF the json object containing informationa about a scene.
@@ -162,14 +168,3 @@ function loadScene(sceneF){
     // }
   });
 }
-// //Testcode:
-// get("tesss.json").then(function(cont){
-//   //will never run, there is no file called tesss.json
-//   console.log(cont);
-// });
-//
-// getJson("test.json").then(function(cont){
-//   console.log("succes!\n" + cont.test);
-// });
-//
-// //---------------------

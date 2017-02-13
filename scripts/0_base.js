@@ -1,4 +1,9 @@
 /*jshint esversion: 6 */
+
+//Globals:
+const DEBUG = true;
+//--------------
+
 var stateStack = [];
 var stateman = {
   init: function(){
