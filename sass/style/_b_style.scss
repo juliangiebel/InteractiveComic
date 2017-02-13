@@ -1,4 +1,21 @@
 .button {
-  color: black;
+  color: white;
+  background-color: rgba(0, 0, 0, .65);
   text-decoration: none;
+  border-left-color: darkgrey;
+  border-left-style: solid;
+  border-left-width: medium;
+  box-shadow: 0 0 21px 4px rgba(0, 0, 0, .85);
+  transition: box-shadow .5s, color .5s;
+}
+
+.button:last-of-type {
+  border-bottom-color: rgba(50, 50, 50, .75);
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+}
+
+.button:hover {
+  box-shadow: 0 0 21px 8px rgba(0, 0, 0, .85);
+  color: black;
 }

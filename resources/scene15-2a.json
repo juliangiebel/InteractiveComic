@@ -1,0 +1,9 @@
+{
+  "type":"interactive",
+  "img":"Material/Stadt/15-2Background.png",
+  "links":[
+    {"x":0,"y":0,"w":346,"h":1080,"img":"Material/Stadt/15-2MCHighlight.png","link":"scene16-2-2a.json"},
+    {"x":551,"y":365,"w":519,"h":654,"img":"Material/Stadt/15-2RobotHighlight.png","link":"scene16-2-1a.json"}
+
+  ]
+}

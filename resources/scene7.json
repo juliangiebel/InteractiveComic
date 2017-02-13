@@ -1,8 +1,8 @@
 {
   "type":"interactive",
-  "img":"Comic/Wald/scene 7.jpg",
+  "img":"Material/Wald/Scene7Background.png",
   "links":[
-    {"x":885,"y":349,"w":312,"h":239,"img":"Material/Wald/Scene7HouseHighlight.png","link":"naechste_szene.json"},
+    {"x":885,"y":349,"w":312,"h":239,"img":"Material/Wald/Scene7HouseHighlight.png","link":"scene8-2.json"},
     {"x":290,"y":318,"w":166,"h":166,"img":"Material/Wald/Scene7ForestHighlight.png","link":"scene8-1.json"}
 
   ]

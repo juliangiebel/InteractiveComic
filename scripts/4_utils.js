@@ -30,6 +30,7 @@ function get(url){
  * @returns {Promise} A promise handling the response from the XMLHttpRequest.
  */
 function getJson(url){
+  console.log(url);
   return get(url).then(JSON.parse).catch(function(err){
     return Promise.reject(Error("Error while parsing a file. "+err.message));
   });
@@ -50,14 +51,6 @@ function getImage(url) {
 
 function createSequence(list,promise) {
   var promises = [];
-  list.forEach((item)=>{promises.push(promise(item));console.log(item);});
+  list.forEach((item)=>{promises.push(promise(item));});
   return Promise.all(promises);
 }
-
-// //Testcode:
-// createSequence(["test.json","test.json","test.json","test.json","test.json","test.json"],(entry) => {
-//   return Promise.resolve("hi");
-// }).then(function(ret) {
-//   console.log("test:" + ret);
-// });
-// //------------------

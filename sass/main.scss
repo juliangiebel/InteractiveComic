@@ -13,11 +13,19 @@
 body {
   margin: 0;
   background-color: #424242;
+  color: white;
 }
 
 .b-container {
-  float: right;
-  margin-right: 40%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  //float: right;
+  margin-right: -10vw;
   padding-top: 15px;
   padding-bottom: 15px;
+}
+
+h1 {
+  font-size: 4em;
 }

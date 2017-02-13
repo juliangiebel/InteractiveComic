@@ -417,8 +417,8 @@ template {
   margin-top: 20px;
   align-items: center;
   justify-content: center;
-  width: 80px;
-  height: 30px; }
+  width: 160px;
+  height: 60px; }
 
 .title {
   text-align: center;
@@ -431,11 +431,36 @@ template {
   position: fixed;
   z-index: -1;
   transform-origin: center;
-  transform: translate(29.5px, 0px); }
+  transform: translate(29.5px, 0); }
+
+.disp {
+  position: fixed;
+  z-index: -1;
+  transform-origin: center; }
+
+.titlebg {
+  width: 100vw;
+  height: 100vh;
+  background-image: url("/resources/Material/Anfang/MainMenu.png"); }
 
 .button {
-  color: black;
-  text-decoration: none; }
+  color: white;
+  background-color: rgba(0, 0, 0, 0.65);
+  text-decoration: none;
+  border-left-color: darkgrey;
+  border-left-style: solid;
+  border-left-width: medium;
+  box-shadow: 0 0 21px 4px rgba(0, 0, 0, 0.85);
+  transition: box-shadow .5s, color .5s; }
+
+.button:last-of-type {
+  border-bottom-color: rgba(50, 50, 50, 0.75);
+  border-bottom-style: solid;
+  border-bottom-width: 2px; }
+
+.button:hover {
+  box-shadow: 0 0 21px 8px rgba(0, 0, 0, 0.85);
+  color: black; }
 
 .imgdisp {
   box-shadow: 0 0 21px 4px rgba(0, 0, 0, 0.85);
@@ -443,12 +468,18 @@ template {
 
 body {
   margin: 0;
-  background-color: #424242; }
+  background-color: #424242;
+  color: white; }
 
 .b-container {
-  float: right;
-  margin-right: 40%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  margin-right: -10vw;
   padding-top: 15px;
   padding-bottom: 15px; }
+
+h1 {
+  font-size: 4em; }
 
 /*# sourceMappingURL=main.css.map */

@@ -9,7 +9,7 @@ class Scene{
     var callback = function(link){
         var localLink = link;
         return function(e){
-        console.log(localLink.link);
+        //console.log(localLink.link);
         getJson("resources/" + localLink.link).then(this.nextScene);
       }.bind(this);
     }.bind(this);
@@ -124,15 +124,20 @@ class MovingScene extends Scene{
 function loadScene(sceneF){
   return new Promise(function(resolve, reject){
 
-    console.log(sceneF.img);
+    //console.log(sceneF.img);
 
     switch (sceneF.type) {
+      case "ende":
+        let end = document.getElementById("end");
+        end.className = "end";
+        end.innerHTML = '<a href="index.html"><h1>Ende</h1><p>Zum Hauptmenü</p></a>';
+        /* falls through */
       case "normal":
-        console.log("normal");
+        //console.log("normal");
         getImage("resources/" + sceneF.img).then(function(ret){
-          console.log("here: "+sceneF.link);
+          //console.log("here: "+sceneF.link);
           this.scene = new NormalScene(ret,sceneF);
-          console.log("onload: " + this.scene.test);
+          //console.log("onload: " + this.scene.test);
           resolve(this.scene);
         });
         break;
@@ -147,10 +152,10 @@ function loadScene(sceneF){
         img.src = "resources/" + sceneF.img;
         var sources = [];
         sceneF.links.forEach((link)=>{sources.push("resources/" +link.img);});
-        console.log(sources);
+        //console.log(sources);
         createSequence(sources,(link)=>{return getImage(link);}).then((results)=>{
           for (var i = 0; i < results.length; i++) {
-            console.log(results[i].src +"|"+ i);
+            //console.log(results[i].src +"|"+ i);
             sceneF.links[i].img = results[i];
           }
           resolve(moving?new MovingScene(img,sceneF):new Scene(img,sceneF.links));

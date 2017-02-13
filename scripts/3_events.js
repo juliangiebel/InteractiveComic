@@ -22,11 +22,11 @@ var EventMgr = {
   };
   var evCall = function(e){
     var pos = getCursorPosition(SingleView.instance.canvas,e);
-    console.log("Click: " + pos.x +"|"+pos.y+"|"+handlers.length+"|"+(pos.x+_eventmgrxoffset));
+    //console.log("Click: " + pos.x +"|"+pos.y+"|"+handlers.length+"|"+(pos.x+_eventmgrxoffset));
     for (var handle of handlers){
       if((handle.aabb.x*_eventmgrscale.x) < (pos.x-_eventmgrxoffset) && (pos.x-_eventmgrxoffset) < (handle.aabb.bx*_eventmgrscale.x) &&
         (handle.aabb.y*_eventmgrscale.y) < pos.y && pos.y < (handle.aabb.by*_eventmgrscale.y)) handle.callback(e);
-        console.log((handle.aabb.x*_eventmgrscale.x)+"|"+(handle.aabb.y*_eventmgrscale.y)+"||"+(handle.aabb.bx*_eventmgrscale.x)+"|"+(handle.aabb.by*_eventmgrscale.y));
+        //console.log((handle.aabb.x*_eventmgrscale.x)+"|"+(handle.aabb.y*_eventmgrscale.y)+"||"+(handle.aabb.bx*_eventmgrscale.x)+"|"+(handle.aabb.by*_eventmgrscale.y));
     }
   }.bind(this);
 
@@ -39,7 +39,7 @@ var EventMgr = {
 
   return {
     add: function(aabb,callback) {
-      console.log("add");
+      //console.log("add");
       handlers.push({aabb,callback});
       sort();
       mouseaabb = aabb;
@@ -80,7 +80,7 @@ var EventMgr = {
 
     return {
       add: function(aabb,callback) {
-        console.log("add mouse move");
+        //console.log("add mouse move");
         handlers.push({aabb,callback});
         sort();
       },
@@ -95,10 +95,3 @@ var EventMgr = {
       }};
   })()
 };
-// //Testcode:
-// var testcb = function() {
-//   console.log("Click: invisible box");
-//   EventMgr.onClick.remove({x:20,y:20,bx:60,by:60},testcb);
-// }.bind(this,testcb);
-// EventMgr.onClick.add({x:20,y:20,bx:60,by:60},testcb);
-// //--------------

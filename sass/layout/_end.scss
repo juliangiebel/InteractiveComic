@@ -1,0 +1,21 @@
+.end {
+  display: flex;
+  position: fixed;
+  justify-content: center;
+  align-items: center;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  color: white;
+  font-size: 4em;
+  text-align: center;
+  text-shadow: 0 0 3px black;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+p {
+  font-size: .5em;
+}

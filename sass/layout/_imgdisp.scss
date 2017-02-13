@@ -1,9 +1,19 @@
 .imgdisp {
   position: fixed;
   z-index: -1;
-  //width: 95%;
-  //height: 95vh;
   transform-origin: center;
-  transform: translate(29.5px, 0px);
+  transform: translate(29.5px, 0);
+}
+
+.disp {
+  position: fixed;
+  z-index: -1;
+  transform-origin: center;
+}
+
+.titlebg {
+  width: 100vw;//95%
+  height: 100vh;//95vh
   //transform: translateX(2.5vw) translateY(2.5vh);
+  background-image: url("/resources/Material/Anfang/MainMenu.png");
 }

@@ -417,14 +417,45 @@ template {
   margin-top: 20px;
   align-items: center;
   justify-content: center;
-  width: 80px;
-  height: 30px; }
+  width: 160px;
+  height: 60px; }
 
 .imgdisp {
   position: fixed;
   z-index: -1;
   transform-origin: center;
-  transform: translate(29.5px, 0px); }
+  transform: translate(29.5px, 0); }
+
+.disp {
+  position: fixed;
+  z-index: -1;
+  transform-origin: center; }
+
+.titlebg {
+  width: 100vw;
+  height: 100vh;
+  background-image: url("/resources/Material/Anfang/MainMenu.png"); }
+
+.end {
+  display: flex;
+  position: fixed;
+  justify-content: center;
+  align-items: center;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  color: white;
+  font-size: 4em;
+  text-align: center;
+  text-shadow: 0 0 3px black; }
+
+a {
+  text-decoration: none;
+  color: inherit; }
+
+p {
+  font-size: .5em; }
 
 .imgdisp {
   box-shadow: 0 0 21px 4px rgba(0, 0, 0, 0.85);

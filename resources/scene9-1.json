@@ -1,6 +1,6 @@
 {
   "type":"interactive",
-  "img":"Comic/Wald/scene 9-1.jpg",
+  "img":"Material/Wald/Scene9-1Background.png",
   "links":[
     {"x":676,"y":237,"w":373,"h":843,"img":"Material/Wald/Scene9-1MCHighlight.png","link":"scene10-1-1.json"},
     {"x":1403,"y":49,"w":439,"h":384,"img":"Material/Wald/Scene9-1BubbleHighlight.png","link":"scene10-1-2.json"}]

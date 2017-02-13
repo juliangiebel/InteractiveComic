@@ -99,29 +99,6 @@ class Rect extends GElement{
 }
 // Source: scripts/2_view.js
 
-
-// var c = document.querySelector("#c");
-// var ctx = c.getContext("2d");
-//
-// var image = new Image(1200,700);
-//
-// function resize() {
-//   c.width  = Math.min(window.innerWidth,MAXWIDTH);
-//   c.height = Math.min(window.innerHeight, MAXHEIGHT);
-//   var styletext = "translate(" +((window.innerWidth - c.width)/2) +"px, " +((window.innerHeight - c.height)/2) +"px)";
-//   document.getElementById("c").style.transform = styletext;
-// }
-//
-// c.onload   = resize();
-// window.addEventListener("resize", resize, false);
-//
-// image.onload = function() {
-//   ctx.drawImage(image,0,0,c.width,c.height);
-//   console.log("Loaded image");
-// };
-//
-// image.src = "img/sunrise-1756274_640.jpg";
-
 const MAXWIDTH = 1920;
 const MAXHEIGHT = 1080;
 
@@ -215,11 +192,11 @@ var EventMgr = {
   };
   var evCall = function(e){
     var pos = getCursorPosition(SingleView.instance.canvas,e);
-    console.log("Click: " + pos.x +"|"+pos.y+"|"+handlers.length+"|"+(pos.x+_eventmgrxoffset));
+    //console.log("Click: " + pos.x +"|"+pos.y+"|"+handlers.length+"|"+(pos.x+_eventmgrxoffset));
     for (var handle of handlers){
       if((handle.aabb.x*_eventmgrscale.x) < (pos.x-_eventmgrxoffset) && (pos.x-_eventmgrxoffset) < (handle.aabb.bx*_eventmgrscale.x) &&
         (handle.aabb.y*_eventmgrscale.y) < pos.y && pos.y < (handle.aabb.by*_eventmgrscale.y)) handle.callback(e);
-        console.log((handle.aabb.x*_eventmgrscale.x)+"|"+(handle.aabb.y*_eventmgrscale.y)+"||"+(handle.aabb.bx*_eventmgrscale.x)+"|"+(handle.aabb.by*_eventmgrscale.y));
+        //console.log((handle.aabb.x*_eventmgrscale.x)+"|"+(handle.aabb.y*_eventmgrscale.y)+"||"+(handle.aabb.bx*_eventmgrscale.x)+"|"+(handle.aabb.by*_eventmgrscale.y));
     }
   }.bind(this);
 
@@ -232,7 +209,7 @@ var EventMgr = {
 
   return {
     add: function(aabb,callback) {
-      console.log("add");
+      //console.log("add");
       handlers.push({aabb,callback});
       sort();
       mouseaabb = aabb;
@@ -273,7 +250,7 @@ var EventMgr = {
 
     return {
       add: function(aabb,callback) {
-        console.log("add mouse move");
+        //console.log("add mouse move");
         handlers.push({aabb,callback});
         sort();
       },
@@ -288,13 +265,6 @@ var EventMgr = {
       }};
   })()
 };
-// //Testcode:
-// var testcb = function() {
-//   console.log("Click: invisible box");
-//   EventMgr.onClick.remove({x:20,y:20,bx:60,by:60},testcb);
-// }.bind(this,testcb);
-// EventMgr.onClick.add({x:20,y:20,bx:60,by:60},testcb);
-// //--------------
 // Source: scripts/4_utils.js
 
 /**Requests a file as plain text from the server.
@@ -328,6 +298,7 @@ function get(url){
  * @returns {Promise} A promise handling the response from the XMLHttpRequest.
  */
 function getJson(url){
+  console.log(url);
   return get(url).then(JSON.parse).catch(function(err){
     return Promise.reject(Error("Error while parsing a file. "+err.message));
   });
@@ -348,17 +319,9 @@ function getImage(url) {
 
 function createSequence(list,promise) {
   var promises = [];
-  list.forEach((item)=>{promises.push(promise(item));console.log(item);});
+  list.forEach((item)=>{promises.push(promise(item));});
   return Promise.all(promises);
 }
-
-// //Testcode:
-// createSequence(["test.json","test.json","test.json","test.json","test.json","test.json"],(entry) => {
-//   return Promise.resolve("hi");
-// }).then(function(ret) {
-//   console.log("test:" + ret);
-// });
-// //------------------
 // Source: scripts/5_scene_parser.js
 
 class Scene{
@@ -371,7 +334,7 @@ class Scene{
     var callback = function(link){
         var localLink = link;
         return function(e){
-        console.log(localLink.link);
+        //console.log(localLink.link);
         getJson("resources/" + localLink.link).then(this.nextScene);
       }.bind(this);
     }.bind(this);
@@ -486,15 +449,20 @@ class MovingScene extends Scene{
 function loadScene(sceneF){
   return new Promise(function(resolve, reject){
 
-    console.log(sceneF.img);
+    //console.log(sceneF.img);
 
     switch (sceneF.type) {
+      case "ende":
+        let end = document.getElementById("end");
+        end.className = "end";
+        end.innerHTML = '<a href="index.html"><h1>Ende</h1><p>Zum Hauptmenü</p></a>';
+        /* falls through */
       case "normal":
-        console.log("normal");
+        //console.log("normal");
         getImage("resources/" + sceneF.img).then(function(ret){
-          console.log("here: "+sceneF.link);
+          //console.log("here: "+sceneF.link);
           this.scene = new NormalScene(ret,sceneF);
-          console.log("onload: " + this.scene.test);
+          //console.log("onload: " + this.scene.test);
           resolve(this.scene);
         });
         break;
@@ -509,10 +477,10 @@ function loadScene(sceneF){
         img.src = "resources/" + sceneF.img;
         var sources = [];
         sceneF.links.forEach((link)=>{sources.push("resources/" +link.img);});
-        console.log(sources);
+        //console.log(sources);
         createSequence(sources,(link)=>{return getImage(link);}).then((results)=>{
           for (var i = 0; i < results.length; i++) {
-            console.log(results[i].src +"|"+ i);
+            //console.log(results[i].src +"|"+ i);
             sceneF.links[i].img = results[i];
           }
           resolve(moving?new MovingScene(img,sceneF):new Scene(img,sceneF.links));
@@ -546,7 +514,7 @@ function resEvent(){
 
 resEvent();
 
-getJson("resources/scene1.json").then(function(cont) {
+getJson("resources/scene15-2a.json").then(function(cont) {
   loadScene(cont).then(function(testScene){
   stateman.destruct();
   SingleView.instance.deleteAll();

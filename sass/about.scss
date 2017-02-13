@@ -1,0 +1,11 @@
+@import "tools/bourbon/bourbon";
+@import "tools/normalize";
+//Own CSS!
+//Layout
+@import "base/generics";
+
+body {
+  margin: 0;
+  background-color: #424242;
+  color: white;
+}
